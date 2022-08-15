@@ -28,7 +28,7 @@
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav ms-auto">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#home">Home</a>
+              <a class="nav-link" aria-current="page" href="#home">Home</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#about">About</a>
@@ -92,25 +92,43 @@
         <div class="row">
           <div class="col-md-4 mb-3">
             <div class="card" data-aos="flip-left" data-aos-duration="500">
-              <img src="..." class="card-img-top" alt="..." />
+              <img src="img/programming.jpg" class="card-img-top" alt="error" />
               <div class="card-body">
+                <h5 class="card-title d-flex justify-content-center align-items-center">Programming</h5>
                 <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <p>
+                  Photo by <a href="https://unsplash.com/@ilyapavlov?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Ilya Pavlov</a> on
+                  <a href="https://unsplash.com/s/photos/keyboard?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>
+                </p>
+                <a href="" class="btn btn-dark d-grid col-12 mx-auto" type="button">Go to Link</a>
               </div>
             </div>
           </div>
           <div class="col-md-4 mb-3">
             <div class="card" data-aos="flip-left" data-aos-duration="500" data-aos-delay="100">
-              <img src="..." class="card-img-top" alt="..." />
+              <img src="img/design.jpg" class="card-img-top" alt="error" />
               <div class="card-body">
+                <h5 class="card-title d-flex justify-content-center align-items-center">Design</h5>
                 <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <p>
+                  Photo by <a href="https://unsplash.com/@thoughtcatalog?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Thought Catalog</a> on
+                  <a href="https://unsplash.com/s/photos/design?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>
+                </p>
+                <a href="" class="btn btn-dark d-grid col-12 mx-auto" type="button">Go to Link</a>
               </div>
             </div>
           </div>
           <div class="col-md-4 mb-3">
             <div class="card" data-aos="flip-left" data-aos-duration="500" data-aos-delay="200">
-              <img src="..." class="card-img-top" alt="..." />
+              <img src="img/video.jpg" class="card-img-top" alt="error" />
               <div class="card-body">
+                <h5 class="card-title d-flex justify-content-center align-items-center">Video</h5>
                 <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <p>
+                  Photo by <a href="https://unsplash.com/@jakobowens1?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Jakob Owens</a> on
+                  <a href="https://unsplash.com/s/photos/video?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>
+                </p>
+                <a href="#" class="btn btn-dark d-grid col-12 mx-auto" type="button">Go to Link</a>
               </div>
             </div>
           </div>
@@ -138,14 +156,15 @@
               <strong>Berhasil!</strong> Mengirim Pesan ke Paulus.
               <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
-            <form name="contact-us">
+            <form id="form" name="contact-us">
               <div class="mb-3">
                 <label for="name" class="form-label">Nama Lengkap</label>
                 <input type="text" class="form-control" id="name" aria-describedby="name" name="nama" />
               </div>
               <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" aria-describedby="email" name="email" />
+                <input type="email" class="form-control" id="email" aria-describedby="email" name="email" onkeydown="validation()" />
+                <span id="text"></span>
               </div>
               <div class="mb-3">
                 <label for="pesan" class="form-label">Pesan</label>
@@ -197,25 +216,61 @@
     </script>
 
     <script>
+      function validation() {
+        var form = document.getElementById("form");
+        var email = document.getElementById("email").value;
+        var text = document.getElementById("text");
+        var pattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+
+        if (email.match(pattern)) {
+          form.classList.add("valid");
+          form.classList.remove("invalid");
+          text.innerHTML = "";
+        } else {
+          form.classList.add("invalid");
+          form.classList.remove("valid");
+          text.innerHTML = "Email harus ada @gmail.com";
+          text.style.color = "#ff0000";
+        }
+
+        if (email == "") {
+          form.classList.remove("valid");
+          form.classList.remove("invalid");
+          text.innerHTML = "";
+        }
+      }
+
       const scriptURL = "https://script.google.com/macros/s/AKfycbzg3n2z46oq-1G63RAHpXqxEhrbYJOIcSwpsPiA16F1PRx-k4uThYAcAQwB7Vfc4yeS5A/exec";
       const form = document.forms["contact-us"];
       const btnKirim = document.querySelector(".btn-kirim");
       const btnLoading = document.querySelector(".btn-loading");
       const myAlert = document.querySelector(".my-alert");
+      const errorAlert = document.querySelector(".error-alert");
+      var input = document.getElementById("form");
 
       form.addEventListener("submit", (e) => {
         e.preventDefault();
         btnLoading.classList.toggle("d-none");
         btnKirim.classList.toggle("d-none");
-        fetch(scriptURL, { method: "POST", body: new FormData(form) })
-          .then((response) => {
+        if (input.classList == "valid") {
+          fetch(scriptURL, { method: "POST", body: new FormData(form) })
+            .then((response) => {
+              btnLoading.classList.toggle("d-none");
+              btnKirim.classList.toggle("d-none");
+              myAlert.classList.toggle("d-none");
+              console.log("Success!", response);
+              form.reset();
+              text.innerHTML = "";
+            })
+            .catch((error) => console.error("Error!", error.message));
+        } else {
+          if (input.classList == "invalid") {
+            form.reset();
             btnLoading.classList.toggle("d-none");
             btnKirim.classList.toggle("d-none");
-            myAlert.classList.toggle("d-none");
-            console.log("Success!", response);
-            form.reset();
-          })
-          .catch((error) => console.error("Error!", error.message));
+            text.innerHTML = "";
+          }
+        }
       });
     </script>
   </body>
